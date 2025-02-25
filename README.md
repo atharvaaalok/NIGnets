@@ -1,2 +1,52 @@
 # Neural Injective Geometry
 Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
+
+
+## Project Plan
+- [ ] Add .gitignore for the project.
+- [ ] Create first cut documentation pages using Jupyterbooks and MyST markdown.
+    - [ ] Motivation for non-self-intersecting geometry.
+    - [ ] Add .gitignore for MyST markdown.
+    - [ ] Launch web page for documentation using github pages.
+- [ ] Create Injective Networks.
+    - [ ] Basic architecture.
+    - [ ] Generate proper documentation.
+        - [ ] Proper docstrings. Follow Google python coding style guide and numpy style guide.
+        - [ ] Use math equations.
+        - [ ] Use type annotations.
+    - [ ] Impossible intersection using matrix exponential.
+- [ ] Use geosimilarity for loss functions.
+- [ ] Add testing code.
+    - [ ] Create automated training function.
+    - [ ] Create plot function. Parameterized and target shape comparison.
+    - [ ] Generate a bunch of target shapes. Use SVGs.
+- [ ] Update documentation with Injective Networks and showcase.
+    - [ ] Add documentation on Injective Networks.
+    - [ ] Fit basic shapes using Injective Networks.
+    - [ ] Create showcase for Injective Networks.
+    - [ ] Create showcase for Injective Networks with impossible intersection.
+- [ ] Add license.
+- [ ] Create logos.
+    - [ ] Create logo.
+    - [ ] Create favicon.
+    - [ ] Use on website.
+- [ ] Add Monotonic networks.
+    - [ ] Add Min-Max nets.
+    - [ ] Add Smooth Min-Max nets.
+    - [ ] Add documentation for Monotonic Nets.
+    - [ ] Add showcase for Monotonic Nets.
+- [ ] Create ResNet-like architecture using skip connections.
+    - [ ] Add skip connections that preserve injectivity.
+    - [ ] Add showcase for ResNet architecture.
+- [ ] Add Auxilliary networks.
+    - [ ] Add Pre-Aux nets.
+    - [ ] Add Post-Aux nets.
+    - [ ] Add documentation for Aux Nets.
+    - [ ] Add showcase for Pre and Post nets separately and combined.
+- [ ] Fit repeating and fractal shapes.
+    - [ ] Use trignometric activations in Pre-Aux networks.
+- [ ] 3D NIGnets.
+    - [ ] Create documentation for 3D NIGnets.
+    - [ ] Create 3D surface point clouds to fit to.
+    - [ ] Fit 3D geometric shapes for showcase.
+- [ ] Experiment with different geometric loss functions.
