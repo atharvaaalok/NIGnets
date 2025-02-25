@@ -5,7 +5,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
 ## Project Plan
 - [x] Add .gitignore for the project.
 - [ ] Create first cut documentation pages using Jupyterbooks and MyST markdown.
-    - [ ] Motivation for non-self-intersecting geometry.
+    - [x] Motivation for non-self-intersecting geometry.
     - [ ] Add .gitignore for MyST markdown.
     - [ ] Launch web page for documentation using github pages.
 - [ ] Create Injective Networks.
