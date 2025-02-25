@@ -1,0 +1,18 @@
+version: 1
+project:
+  title: Neural Injective Geometry
+  date: 2025-02-25
+  jupyter: true
+  github: https://github.com/atharvaaalok/NIGnets
+  authors:
+  - name: Atharva Aalok
+    email: atharvaaalok@gmail.com
+    corresponding: true
+    affiliations: Stanford University
+    twitter: atharvaaalok
+    github: atharvaaalok
+  toc:
+  - file: introduction.ipynb
+site:
+  template: book-theme
+  title: Neural Injective Geometry
