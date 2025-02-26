@@ -13,7 +13,10 @@ project:
     github: atharvaaalok
   toc:
   - file: introduction.ipynb
-  - file: injective_networks.ipynb
+  - title: Injective Networks
+    children:
+      - file: injective_networks.ipynb
+      - file: injective_networks_showcase.ipynb
 site:
   template: book-theme
   title: Neural Injective Geometry
