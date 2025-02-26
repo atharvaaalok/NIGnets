@@ -14,7 +14,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
         - [ ] Proper docstrings. Follow Google python coding style guide and numpy style guide.
         - [ ] Use math equations.
         - [ ] Use type annotations.
-    - [ ] Impossible intersection using matrix exponential.
+    - [x] Impossible intersection using matrix exponential.
 - [x] Use geosimilarity for loss functions.
 - [x] Add testing code.
     - [x] Create automated training function.
