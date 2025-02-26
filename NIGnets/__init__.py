@@ -1,0 +1,1 @@
+from .injective_net import NIGnet
