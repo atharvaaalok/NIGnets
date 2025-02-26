@@ -17,7 +17,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [ ] Impossible intersection using matrix exponential.
 - [x] Use geosimilarity for loss functions.
 - [ ] Add testing code.
-    - [ ] Create automated training function.
+    - [x] Create automated training function.
     - [ ] Create plot function. Parameterized and target shape comparison.
     - [ ] Generate a bunch of target shapes. Use SVGs.
 - [ ] Update documentation with Injective Networks and showcase.
