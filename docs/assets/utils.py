@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 def automate_training(
         model,
         loss_fn,
-        X_train,
-        Y_train,
-        epochs = 1000,
-        print_cost_every = 200,
-        learning_rate = 0.001,
-):
+        X_train: torch.Tensor,
+        Y_train: torch.Tensor,
+        epochs: int = 1000,
+        print_cost_every: int = 200,
+        learning_rate: float = 0.001,
+) -> None:
     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor = 0.99)
 
@@ -28,7 +28,7 @@ def automate_training(
             print(f'Epoch: [{epoch + 1:{num_digits}}/{epochs}]. Loss: {loss.item():11.6f}')
 
 
-def plot_curves(Xc, Xt):
+def plot_curves(Xc: torch.Tensor, Xt: torch.Tensor) -> None:
     # Get torch tensor to cpu and disable gradient tracking to plot using matplotlib
     Xc = Xc.detach().cpu()
     Xt = Xt.detach().cpu()
