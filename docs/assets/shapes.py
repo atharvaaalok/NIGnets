@@ -25,3 +25,8 @@ def square(num_pts: int) -> torch.Tensor:
 def stanford_bunny(num_pts: int) -> torch.Tensor:
     X = svg_extract_xy('stanford_bunny.svg', num_pts = num_pts)
     return X
+
+
+def airfoil(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('airfoil.svg', num_pts = num_pts)
+    return X
