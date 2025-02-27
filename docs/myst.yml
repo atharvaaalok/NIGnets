@@ -25,3 +25,6 @@ project:
 site:
   template: book-theme
   title: Neural Injective Geometry
+  options:
+    favicon: assets/logos/favicon.svg
+    logo: assets/logos/logo_text.svg
