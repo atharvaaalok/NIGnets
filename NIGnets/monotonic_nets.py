@@ -4,8 +4,66 @@ import torch.nn.functional as F
 
 
 class MinMaxNet(nn.Module):
+    """
+    MinMax Monotonic Network architecture as described in [1]_ that computes a "min of max"
+    operation across groups of linear units, with constraints on monotonicity for each input
+    dimension.
 
-    def __init__(self, input_dim, n_groups, nodes_per_group, monotonicity = None):
+    Attributes
+    ----------
+    input_dim : int
+        Number of input features.
+    n_groups : int
+        Number of groups.
+    nodes_per_group : int
+        Number of nodes within each group.
+    mono_signs : torch.Tensor
+        A buffer indicating the monotonic signs for each input dimension of shape (1, 1, input_dim).
+        Derived from the 'monotonicity' list.
+    raw_weights : torch.nn.Parameter
+        The raw weights for the linear units of shape (n_groups, nodes_per_group, input_dim).
+        These are exponentiated or left unconstrained in `forward()` based on `mono_signs`.
+    biases : torch.nn.Parameter
+        Bias terms for each node of shape (n_groups, nodes_per_group).
+    
+    Parameters
+    ----------
+    input_dim : int
+        Number of input features.
+    n_groups : int
+        Number of groups.
+    nodes_per_group : int
+        Number of nodes within each group.
+    monotonicity: list[int], optional
+        List specifying monotonicity constraints for each input dimension.
+        Possible values for each element:
+          - 1  -> strictly increasing
+          - -1 -> strictly decreasing
+          - 0  -> no monotonic constraint
+        If None, a list of all +1 is used (strictly increasing). The default is None.
+    
+    References
+    ----------
+    .. [1] Sill, J. (1997). Monotonic networks. Advances in neural information processing systems,
+        10.
+    """
+
+    def __init__(
+        self,
+        input_dim: int,
+        n_groups: int,
+        nodes_per_group: int,
+        monotonicity: list = None
+    ) -> None:
+        """
+        Constructs all the necessary attributes for the MinMaxNet.
+
+        Raises
+        ------
+        ValueError
+            If the length of `monotonicity` is not equal to `input_dim`.
+        """
+
         super().__init__()
 
         self.input_dim = input_dim
@@ -39,7 +97,21 @@ class MinMaxNet(nn.Module):
         )
     
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Performs the forward pass of the MinMaxNet.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            Input tensor of shape (batch_size, input_dim).
+        
+        Returns
+        -------
+        torch.Tensor
+            Output tensor of shape (batch_size,).
+        """
+
         # Constrain weights according to monotonicity
         # - If monotonic sign is +1, we use exp(raw_weights) to force positivity
         # - If monotonic sign is -1, we use -exp(raw_weights) to force negativity
