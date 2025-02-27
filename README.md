@@ -24,7 +24,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [x] Add documentation on Injective Networks.
     - [x] Fit basic shapes using Injective Networks.
     - [x] Create showcase for Injective Networks.
-    - [ ] Create showcase for Injective Networks with impossible intersection.
+    - [x] Create showcase for Injective Networks with impossible intersection.
 - [ ] Add license.
 - [ ] Create logos.
     - [ ] Create logo.
