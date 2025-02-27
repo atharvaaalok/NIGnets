@@ -41,7 +41,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
 - [ ] Add Auxilliary networks.
     - [x] Add Pre-Aux nets.
     - [x] Add Post-Aux nets.
-    - [ ] Add documentation for Aux Nets.
+    - [x] Add documentation for Aux Nets.
     - [ ] Add showcase for Pre and Post nets separately and combined.
 - [ ] Fit repeating and fractal shapes.
     - [ ] Use trignometric activations in Pre-Aux networks.
