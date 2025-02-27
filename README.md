@@ -31,7 +31,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [ ] Create favicon.
     - [ ] Use on website.
 - [ ] Add Monotonic networks.
-    - [ ] Add Min-Max nets.
+    - [x] Add Min-Max nets.
     - [ ] Add Smooth Min-Max nets.
     - [x] Add documentation for Monotonic Nets.
     - [ ] Add showcase for Monotonic Nets.
