@@ -1,6 +1,10 @@
 # Neural Injective Geometry
 Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
 
+<div align="center">
+    <img alt="NIGnets Logo with text on the side." src="https://github.com/atharvaaalok/NIGnets/blob/main/docs/assets/logos/logo_with_text_inside.svg" height="300px">
+</div>
+
 
 ## Project Plan
 - [x] Add .gitignore for the project.
