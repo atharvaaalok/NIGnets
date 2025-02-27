@@ -25,6 +25,9 @@ class SmoothMinMaxNet(nn.Module):
         These are exponentiated or left unconstrained in `forward()` based on `mono_signs`.
     biases : torch.nn.Parameter
         Bias terms for each node of shape (n_groups, nodes_per_group).
+    log_beta : float
+        Logarithm of the smooth maximum parameter beta. Beta calculated as exp(log_beta) ensures
+        positivity of beta.
     
     Parameters
     ----------
@@ -41,6 +44,8 @@ class SmoothMinMaxNet(nn.Module):
           - -1 -> strictly decreasing
           - 0  -> no monotonic constraint
         If None, a list of all +1 is used (strictly increasing). The default is None.
+    init_log_beta : float
+        Initial value for log_beta, by default -1.
     
     References
     ----------
@@ -53,7 +58,7 @@ class SmoothMinMaxNet(nn.Module):
         n_groups: int,
         nodes_per_group: int,
         monotonicity: list = None,
-        init_log_beta = -1.0
+        init_log_beta: float = -1.0
     ) -> None:
         """
         Constructs all the necessary attributes for the MinMaxNet.
@@ -146,5 +151,28 @@ class SmoothMinMaxNet(nn.Module):
 
 
     @staticmethod
-    def _smooth_max(z, beta, dim):
+    def _smooth_max(z: torch.Tensor, beta: float, dim: int) -> None:
+        """
+        Computes a smooth approximation to the maximum function using LogSumExp function.
+
+        The smooth maximum with parameter :math:`\beta` is defined as:
+
+        .. math::
+            \mathrm{smoothmax}_{\beta}(z) = \frac{1}{\beta} \log
+                \left( \sum_i \exp \left( \beta z_i \right) \right)
+        
+        Parameters
+        ----------
+        z : torch.Tensor
+            Input tensor containing values to compute maximum over.
+        beta : float
+            Smoothness parameter controlling approximation quality:
+        dim : int
+            Dimension along which to compute maximum.
+        
+        Returns
+        -------
+        torch.Tensor
+            Smooth maximum values, reduced along specified dimension.
+        """
         return (1.0 / beta) * torch.logsumexp(beta * z, dim = dim)
