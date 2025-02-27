@@ -22,7 +22,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [x] Generate a bunch of target shapes. Use SVGs.
 - [ ] Update documentation with Injective Networks and showcase.
     - [x] Add documentation on Injective Networks.
-    - [ ] Fit basic shapes using Injective Networks.
+    - [x] Fit basic shapes using Injective Networks.
     - [ ] Create showcase for Injective Networks.
     - [ ] Create showcase for Injective Networks with impossible intersection.
 - [ ] Add license.
