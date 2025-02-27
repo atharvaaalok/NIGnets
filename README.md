@@ -33,7 +33,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
 - [ ] Add Monotonic networks.
     - [ ] Add Min-Max nets.
     - [ ] Add Smooth Min-Max nets.
-    - [ ] Add documentation for Monotonic Nets.
+    - [x] Add documentation for Monotonic Nets.
     - [ ] Add showcase for Monotonic Nets.
 - [ ] Create ResNet-like architecture using skip connections.
     - [ ] Add skip connections that preserve injectivity.
