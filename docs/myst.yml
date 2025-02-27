@@ -17,6 +17,7 @@ project:
     children:
       - file: injective_networks.ipynb
       - file: injective_networks_showcase.ipynb
+  - file: monotonic_networks.ipynb
 site:
   template: book-theme
   title: Neural Injective Geometry
