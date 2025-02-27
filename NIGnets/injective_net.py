@@ -68,6 +68,8 @@ class NIGnet(nn.Module):
             )
         if (act_fn is not None) and (monotonic_net is not None):
             raise ValueError('Only one of "act_fn" or "monotonic_net" can be specified.')
+        self.act_fn = act_fn
+        self.monotonic_net = monotonic_net
 
         if intersection not in self.available_intersection_modes:
             raise ValueError(f'Invalid intersection mode. ' \
@@ -116,9 +118,12 @@ class NIGnet(nn.Module):
         for linear_layer, act_layer in zip(self.linear_layers, self.act_layers):
             # Apply linear transformation
             X = linear_layer(X)
-            # Apply activation function or monotonic network to each component of x separately
-            x1, x2 = X[:, 0:1], X[:, 1:2]
-            X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
+            if self.act_fn is not None:
+                X = act_layer(X)
+            else:
+                # Apply activation function or monotonic network to each component of x separately
+                x1, x2 = X[:, 0:1], X[:, 1:2]
+                X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
 
         return X
 
