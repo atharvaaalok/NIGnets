@@ -47,6 +47,7 @@ class NIGnet(nn.Module):
         layer_count: int,
         act_fn: Callable[[], nn.Module] = None,
         monotonic_net: nn.Module = None,
+        preaux_net = None,
         intersection: str = 'possible'
     ) -> None:
         """
@@ -71,16 +72,21 @@ class NIGnet(nn.Module):
         self.act_fn = act_fn
         self.monotonic_net = monotonic_net
 
+        self.preaux_net = preaux_net
+
         if intersection not in self.available_intersection_modes:
             raise ValueError(f'Invalid intersection mode. ' \
                              f'Choose from {self.available_intersection_modes}')
         self.intersection = intersection
 
         # Define the transformation from t on the [0, 1] interval to unit circle for closed shapes
-        self.closed_transform = lambda t: torch.hstack([
-            torch.cos(2 * torch.pi * t),
-            torch.sin(2 * torch.pi * t)
-        ])
+        if preaux_net is not None:
+            self.closed_transform = preaux_net
+        else:
+            self.closed_transform = lambda t: torch.hstack([
+                torch.cos(2 * torch.pi * t),
+                torch.sin(2 * torch.pi * t)
+            ])
 
         Linear_class = nn.Linear if intersection == 'possible' else ExpLinear
         
