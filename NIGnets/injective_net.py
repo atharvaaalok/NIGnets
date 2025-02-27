@@ -3,6 +3,7 @@ import torch.nn as nn
 import math
 import torch.nn.functional as F
 from typing import Callable
+import copy
 
 
 class NIGnet(nn.Module):
@@ -14,6 +15,9 @@ class NIGnet(nn.Module):
     ----------
     available_intersection_modes : list[str]
         List of valid intersection modes. Valid values are ['possible', 'impossible']
+    layer_count : int
+        The number of (linear + activation) layers in the network. There is one extra linear layer
+        at the end.
     intersection : str
         The chosen intersection mode that determines the linear layer to be `nn.Linear` or
         `ExpLinear`.
@@ -41,7 +45,8 @@ class NIGnet(nn.Module):
     def __init__(
         self,
         layer_count: int,
-        act_fn: Callable[[], nn.Module],
+        act_fn: Callable[[], nn.Module] = None,
+        monotonic_net: nn.Module = None,
         intersection: str = 'possible'
     ) -> None:
         """
@@ -54,6 +59,15 @@ class NIGnet(nn.Module):
         """
 
         super(NIGnet, self).__init__()
+
+        self.layer_count = layer_count
+
+        if (act_fn is None) and (monotonic_net is None):
+            raise ValueError(
+                'Either an activation function or a monotonic network must be specified.'
+            )
+        if (act_fn is not None) and (monotonic_net is not None):
+            raise ValueError('Only one of "act_fn" or "monotonic_net" can be specified.')
 
         if intersection not in self.available_intersection_modes:
             raise ValueError(f'Invalid intersection mode. ' \
@@ -68,13 +82,16 @@ class NIGnet(nn.Module):
 
         Linear_class = nn.Linear if intersection == 'possible' else ExpLinear
         
-        layers = []
+        self.linear_layers = nn.ModuleList()
+        self.act_layers = nn.ModuleList()
         for i in range(layer_count):
-            layers.append(Linear_class(2, 2))
-            layers.append(act_fn())
-        layers.append(Linear_class(2, 2))
+            self.linear_layers.append(Linear_class(2, 2))
+            if act_fn is not None:
+                self.act_layers.append(act_fn())
+            else:
+                self.act_layers.append(copy.deepcopy(monotonic_net))
+        self.linear_layers.append(Linear_class(2, 2))
         
-        self.linear_act_stack = nn.Sequential(*layers)
     
 
     def forward(self, t: torch.Tensor) -> torch.Tensor:
@@ -95,7 +112,14 @@ class NIGnet(nn.Module):
         """
 
         X = self.closed_transform(t)
-        X = self.linear_act_stack(X)
+
+        for linear_layer, act_layer in zip(self.linear_layers, self.act_layers):
+            # Apply linear transformation
+            X = linear_layer(X)
+            # Apply activation function or monotonic network to each component of x separately
+            x1, x2 = X[:, 0:1], X[:, 1:2]
+            X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
+
         return X
 
 
