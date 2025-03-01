@@ -105,7 +105,7 @@ class NIGnet(nn.Module):
                 self.act_layers.append(act_fn())
             else:
                 self.act_layers.append(copy.deepcopy(monotonic_net))
-        self.linear_layers.append(Linear_class(2, 2))
+        self.final_linear = Linear_class(2, 2)
         
     
 
@@ -144,6 +144,8 @@ class NIGnet(nn.Module):
             
             if self.skip_connections:
                 X = (X + residual) / 2.0
+        
+        X = self.final_linear(X)
 
         return X
 
