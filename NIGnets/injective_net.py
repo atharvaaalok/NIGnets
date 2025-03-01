@@ -48,7 +48,8 @@ class NIGnet(nn.Module):
         act_fn: Callable[[], nn.Module] = None,
         monotonic_net: nn.Module = None,
         preaux_net = None,
-        intersection: str = 'possible'
+        intersection: str = 'possible',
+        skip_connections = True
     ) -> None:
         """
         Initialize NIGnet with specified architecture and intersection mode.
@@ -78,6 +79,8 @@ class NIGnet(nn.Module):
             raise ValueError(f'Invalid intersection mode. ' \
                              f'Choose from {self.available_intersection_modes}')
         self.intersection = intersection
+
+        self.skip_connections = skip_connections
 
         # Define the transformation from t on the [0, 1] interval to unit circle for closed shapes
         if preaux_net is not None:
@@ -124,12 +127,19 @@ class NIGnet(nn.Module):
         for linear_layer, act_layer in zip(self.linear_layers, self.act_layers):
             # Apply linear transformation
             X = linear_layer(X)
+
+            if self.skip_connections:
+                residual = X
+            
             if self.act_fn is not None:
                 X = act_layer(X)
             else:
                 # Apply activation function or monotonic network to each component of x separately
                 x1, x2 = X[:, 0:1], X[:, 1:2]
                 X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
+            
+            if self.skip_connections:
+                X = (X + residual) / 2.0
 
         return X
 
