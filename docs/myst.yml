@@ -12,6 +12,7 @@ project:
     twitter: atharvaaalok
     github: atharvaaalok
   toc:
+  - file: NIGnets.ipynb
   - file: introduction.ipynb
   - title: Injective Networks
     children:
