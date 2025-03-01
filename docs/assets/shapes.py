@@ -42,3 +42,23 @@ def stanford_bunny(num_pts: int) -> torch.Tensor:
 def airfoil(num_pts: int) -> torch.Tensor:
     X = svg_extract_xy('airfoil.svg', num_pts = num_pts)
     return X
+
+
+def heart(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('heart.svg', num_pts = num_pts)
+    return X
+
+
+def hand(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('hand.svg', num_pts = num_pts)
+    return X
+
+
+def puzzle_piece(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('puzzle_piece.svg', num_pts = num_pts)
+    return X
+
+
+def airplane(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('airplane.svg', num_pts = num_pts)
+    return X
