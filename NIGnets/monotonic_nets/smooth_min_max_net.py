@@ -11,6 +11,8 @@ class SmoothMinMaxNet(nn.Module):
 
     Attributes
     ----------
+    available_positivity_constraints : list[str]
+        List of valid positivity constraints. Valid values are ['squared', 'exponential']
     input_dim : int
         Number of input features.
     n_groups : int
@@ -20,6 +22,8 @@ class SmoothMinMaxNet(nn.Module):
     mono_signs : torch.Tensor
         A buffer indicating the monotonic signs for each input dimension of shape (1, 1, input_dim).
         Derived from the 'monotonicity' list.
+    positivity_constraint : str
+        The method used to ensure positivity of weights. E.g. squaring or exponentiating.
     raw_weights : torch.nn.Parameter
         The raw weights for the linear units of shape (n_groups, nodes_per_group, input_dim).
         These are exponentiated or left unconstrained in `forward()` based on `mono_signs`.
@@ -46,6 +50,8 @@ class SmoothMinMaxNet(nn.Module):
         If None, a list of all +1 is used (strictly increasing). The default is None.
     init_log_beta : float
         Initial value for log_beta, by default -1.
+    positivity_constraint : str
+        The method used to ensure positivity of weights. E.g. squaring or exponentiating.
     
     References
     ----------
@@ -61,7 +67,7 @@ class SmoothMinMaxNet(nn.Module):
         nodes_per_group: int,
         monotonicity: list = None,
         init_log_beta: float = -1.0,
-        positivity_constraint = 'squared'
+        positivity_constraint: str = 'squared'
     ) -> None:
         """
         Constructs all the necessary attributes for the MinMaxNet.
@@ -130,8 +136,8 @@ class SmoothMinMaxNet(nn.Module):
         """
 
         # Constrain weights according to monotonicity
-        # - If monotonic sign is +1, we use exp(raw_weights) to force positivity
-        # - If monotonic sign is -1, we use -exp(raw_weights) to force negativity
+        # - If monotonic sign is +1, we use exp(raw_weights) / raw_weights**2 to force positivity
+        # - If monotonic sign is -1, we use -exp(raw_weights) / -raw_weights**2 to force negativity
         # - If monotonic sign is 0, we use raw_weights and leave them unconstrained
         if self.positivity_constraint == 'squared':
             w_pos = self.raw_weights ** 2
