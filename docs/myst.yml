@@ -23,6 +23,7 @@ project:
     - file: monotonic_networks.ipynb
     - file: monotonic_networks_showcase.ipynb
   - file: auxilliary_networks.ipynb
+  - file: API.ipynb
 site:
   template: book-theme
   title: Neural Injective Geometry
