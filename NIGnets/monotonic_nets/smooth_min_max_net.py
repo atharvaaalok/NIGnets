@@ -52,13 +52,16 @@ class SmoothMinMaxNet(nn.Module):
     .. [1] Igel, C. (2023). Smooth min-max monotonic networks. arXiv preprint arXiv:2306.01147.
     """
 
+    available_positivity_constraints = ['squared', 'exponential']
+
     def __init__(
         self,
         input_dim: int,
         n_groups: int,
         nodes_per_group: int,
         monotonicity: list = None,
-        init_log_beta: float = -1.0
+        init_log_beta: float = -1.0,
+        positivity_constraint = 'squared'
     ) -> None:
         """
         Constructs all the necessary attributes for the MinMaxNet.
@@ -83,6 +86,11 @@ class SmoothMinMaxNet(nn.Module):
             raise ValueError(
                 f'Expected monotonicity to have length {input_dim}, got {len(monotonicity)}.'
             )
+        
+        if positivity_constraint not in self.available_positivity_constraints:
+            raise ValueError(f'Invalid positivity constraint. ' \
+                             f'Choose from {self.available_positivity_constraints}')
+        self.positivity_constraint = positivity_constraint
         
         # Convert monotonicity from list of -1, 0, 1 to actual signs
         # We store them in a buffer so that pytorch does not treat them as parameters
@@ -125,12 +133,16 @@ class SmoothMinMaxNet(nn.Module):
         # - If monotonic sign is +1, we use exp(raw_weights) to force positivity
         # - If monotonic sign is -1, we use -exp(raw_weights) to force negativity
         # - If monotonic sign is 0, we use raw_weights and leave them unconstrained
-        w_exp = torch.exp(self.raw_weights)
+        if self.positivity_constraint == 'squared':
+            w_pos = self.raw_weights ** 2
+        elif self.positivity_constraint == 'exponential':
+            w_pos = torch.exp(self.raw_weights)
+        
         sign_matrix = torch.sign(self.mono_signs).expand_as(self.raw_weights)
         w_actual = torch.where(
             sign_matrix == 0,
             self.raw_weights,
-            sign_matrix * w_exp
+            sign_matrix * w_pos
         )
         
         x_expanded = x.unsqueeze(1).unsqueeze(1)    # (batch_size, 1, 1, input_dim)
