@@ -25,6 +25,8 @@ class NIGnet(nn.Module):
         A function that maps `t` (in [0, 1]) onto the unit circle.
     linear_act_stack : nn.Sequential
         A sequence of alternating linear layers (or ExpLinear layers) and activation functions.
+    skip_connections : bool
+        Adds skip connections similar to those used in ResNet architecture.
     
     Parameters
     ----------
@@ -38,6 +40,8 @@ class NIGnet(nn.Module):
         Must be one of ['possible', 'impossible'].
         If set to 'possible', standard nn.Linear is used;
         If set to 'impossible', ExpLinear is used.
+    skip_connections : bool, optional
+        Adds skip connections similar to those used in ResNet architecture.
     """
 
     available_intersection_modes = ['possible', 'impossible']
@@ -49,7 +53,7 @@ class NIGnet(nn.Module):
         monotonic_net: nn.Module = None,
         preaux_net = None,
         intersection: str = 'possible',
-        skip_connections = True
+        skip_connections: bool = True
     ) -> None:
         """
         Initialize NIGnet with specified architecture and intersection mode.
