@@ -99,12 +99,20 @@ class NIGnet(nn.Module):
         
         self.linear_layers = nn.ModuleList()
         self.act_layers = nn.ModuleList()
+
+        # Initialize parameter list to hold skip connection scaling factor 'alpha'
+        # In the forward pass alpha**2 will be used to ensure positive scaling
+        self.alphas = nn.ParameterList()
+
         for i in range(layer_count):
             self.linear_layers.append(Linear_class(2, 2))
             if act_fn is not None:
                 self.act_layers.append(act_fn())
             else:
                 self.act_layers.append(copy.deepcopy(monotonic_net))
+            
+            self.alphas.append(nn.Parameter(torch.tensor(1.0)))
+        
         self.final_linear = Linear_class(2, 2)
         
     
@@ -128,7 +136,7 @@ class NIGnet(nn.Module):
 
         X = self.closed_transform(t)
 
-        for linear_layer, act_layer in zip(self.linear_layers, self.act_layers):
+        for i, (linear_layer, act_layer) in enumerate(zip(self.linear_layers, self.act_layers)):
             # Apply linear transformation
             X = linear_layer(X)
 
@@ -143,7 +151,8 @@ class NIGnet(nn.Module):
                 X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
             
             if self.skip_connections:
-                X = (X + residual) / 2.0
+                alpha_sq = self.alphas[i] ** 2
+                X = (X + alpha_sq * residual) / 2.0
         
         X = self.final_linear(X)
 
