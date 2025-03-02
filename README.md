@@ -49,7 +49,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [ ] Add showcase for Pre and Post nets separately and combined.
 - [ ] Fit repeating and fractal shapes.
     - [ ] Use trignometric activations in Pre-Aux networks.
-- [ ] Showcase for the full architecture.
+- [x] Showcase for the full architecture.
 - [ ] 3D NIGnets.
     - [ ] Create documentation for 3D NIGnets.
     - [ ] Create 3D surface point clouds to fit to.
