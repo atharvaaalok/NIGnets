@@ -18,11 +18,14 @@ project:
     children:
       - file: injective_networks.ipynb
       - file: injective_networks_showcase.ipynb
-  - title:  Monotonic Networks
+  - title: Monotonic Networks
     children:
     - file: monotonic_networks.ipynb
     - file: monotonic_networks_showcase.ipynb
-  - file: auxilliary_networks.ipynb
+  - title: Auxilliary Networks
+    children:
+    - file: auxilliary_networks.ipynb
+    - file: auxilliary_networks_showcase.ipynb
   - file: API.ipynb
 site:
   template: book-theme
