@@ -26,6 +26,7 @@ project:
     children:
     - file: auxilliary_networks.ipynb
     - file: auxilliary_networks_showcase.ipynb
+  - file: showcase.ipynb
   - file: API.ipynb
 site:
   template: book-theme
