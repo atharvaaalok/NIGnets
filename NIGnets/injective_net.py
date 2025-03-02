@@ -77,7 +77,8 @@ class NIGnet(nn.Module):
         self.act_fn = act_fn
         self.monotonic_net = monotonic_net
 
-        self.preaux_net = preaux_net
+        self.preaux_net = nn.ModuleList()
+        self.preaux_net = copy.deepcopy(preaux_net)
 
         if intersection not in self.available_intersection_modes:
             raise ValueError(f'Invalid intersection mode. ' \
@@ -88,7 +89,7 @@ class NIGnet(nn.Module):
 
         # Define the transformation from t on the [0, 1] interval to unit circle for closed shapes
         if preaux_net is not None:
-            self.closed_transform = preaux_net
+            self.closed_transform = self.preaux_net
         else:
             self.closed_transform = lambda t: torch.hstack([
                 torch.cos(2 * torch.pi * t),
