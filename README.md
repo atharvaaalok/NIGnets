@@ -41,7 +41,7 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
     - [x] Add showcase for Monotonic Nets.
 - [ ] Create ResNet-like architecture using skip connections.
     - [x] Add skip connections that preserve injectivity.
-    - [ ] Add showcase for ResNet architecture.
+    - [x] Add showcase for ResNet architecture.
 - [ ] Add Auxilliary networks.
     - [x] Add Pre-Aux nets.
     - [x] Add Post-Aux nets.
