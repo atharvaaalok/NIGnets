@@ -4,6 +4,7 @@ import math
 import torch.nn.functional as F
 from typing import Callable
 import copy
+import matplotlib.pyplot as plt
 
 
 class NIGnet(nn.Module):
@@ -158,6 +159,96 @@ class NIGnet(nn.Module):
         X = self.final_linear(X)
 
         return X
+
+
+    def generate_noisy_shapes(
+        self,
+        noise_amount,
+        num_generations,
+        num_pts = 1000
+    ):
+        t = torch.linspace(0, 1, num_pts).reshape(-1, 1)
+
+        # Compute original shape
+        original_shape = self(t).detach().cpu()
+
+        # Store all noisy shapes
+        noisy_shapes = torch.zeros((num_generations, num_pts, 2))
+
+        for i in range(num_generations):
+            # Create a noisy copy of the network
+            noisy_net = copy.deepcopy(self)
+            for param in noisy_net.parameters():
+                param.data += torch.randn_like(param) * noise_amount
+            
+            # Generate the noisy shape and store its x and y components separately
+            noisy_shapes[i] = noisy_net(t).detach().cpu()
+
+        # Compute the mean and standard deviation across noisy shapes
+        mean_shape = torch.mean(noisy_shapes, axis = 0)
+        std_shape = torch.std(noisy_shapes, axis = 0)
+
+        # Create a 4x1 grid of subplots
+        fig, axes = plt.subplots(4, 1, figsize = (6, 24))
+
+        # Common plot settings
+        plot_kwargs = {
+            'original': {'color': 'k', 'lw': 3, 'label': 'Original Shape'},
+            'mean': {'color': 'r', 'lw': 1, 'ls': '--', 'label': 'Mean Shape'},
+            'fill': {'color': 'grey', 'alpha': 0.1},
+        }
+
+        # Subplot 1: Noisy shapes
+        ax = axes[0]
+        for shape in noisy_shapes:
+            ax.plot(shape[:, 0], shape[:, 1], alpha = 0.3, linewidth = 0.8)
+        ax.plot(original_shape[:, 0], original_shape[:, 1], **plot_kwargs['original'])
+        ax.plot(mean_shape[:, 0], mean_shape[:, 1], **plot_kwargs['mean'])
+        ax.set_title('Noisy Shapes')
+
+        # Subplot 2: Mean ± Std Variation using fill_betweenx
+        ax = axes[1]
+        ax.fill_betweenx(
+            mean_shape[:, 1],
+            mean_shape[:, 0] - std_shape[:, 0],
+            mean_shape[:, 0] + std_shape[:, 0],
+            color = 'blue', alpha = 0.3, label = 'X Variation (Mean ± Std)'
+        )
+        ax.fill_between(
+            mean_shape[:, 0],
+            mean_shape[:, 1] - std_shape[:, 1],
+            mean_shape[:, 1] + std_shape[:, 1],
+            color = 'green', alpha = 0.3, label = 'Y Variation (Mean ± Std)')
+        ax.plot(original_shape[:, 0], original_shape[:, 1], **plot_kwargs['original'])
+        ax.plot(mean_shape[:, 0], mean_shape[:, 1], **plot_kwargs['mean'])
+        ax.set_title('Mean ± Std Variation')
+
+        # Subplot 3: Individual Filled Noisy Shapes
+        ax = axes[2]
+        for i in range(num_generations):
+            ax.fill(noisy_shapes[i, :, 0], noisy_shapes[i, :, 1], **plot_kwargs['fill'])
+        ax.plot(original_shape[:, 0], original_shape[:, 1], **plot_kwargs['original'])
+        ax.plot(mean_shape[:, 0], mean_shape[:, 1], **plot_kwargs['mean'])
+        ax.set_title('Noisy Shapes Filled')
+
+        # Subplot 4: Plot envelope
+        ax = axes[3]
+        for i in range(num_generations):
+            ax.fill(noisy_shapes[i, :, 0], noisy_shapes[i, :, 1], color = 'skyblue')
+        ax.plot(original_shape[:, 0], original_shape[:, 1], **plot_kwargs['original'])
+        ax.plot(mean_shape[:, 0], mean_shape[:, 1], **plot_kwargs['mean'])
+        ax.set_title('Noisy Shapes Envelope')
+
+        for i in range(4):
+            ax = axes[i]
+            ax.set_xlabel('x')
+            ax.set_ylabel('y')
+            ax.axis('equal')
+            ax.grid(True, alpha = 0.5)
+            ax.legend()
+
+        plt.tight_layout()
+        plt.show()
 
 
 class ExpLinear(nn.Module):
