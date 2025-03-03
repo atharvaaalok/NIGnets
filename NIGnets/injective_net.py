@@ -163,10 +163,24 @@ class NIGnet(nn.Module):
 
     def generate_noisy_shapes(
         self,
-        noise_amount,
-        num_generations,
-        num_pts = 1000
-    ):
+        noise_amount: float,
+        num_generations: int,
+        num_pts: int = 1000
+    ) -> None:
+        """
+        Generate and plot noisy variations of the original NIGnet shape using four different
+        visualizations.
+
+        Parameters
+        ----------
+        noise_amount : float
+            Standard deviation of the Gaussian noise added to the weight matrices.
+        num_generations : int
+            Number of noisy versions to generate.
+        num_pts : int, optional
+            Number of points sampled along the curve, default is 1000.
+        """
+        
         t = torch.linspace(0, 1, num_pts).reshape(-1, 1)
 
         # Compute original shape
