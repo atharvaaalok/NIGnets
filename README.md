@@ -17,6 +17,7 @@ $ pip install git+https://github.com/atharvaaalok/NIGnets.git
 To create a basic NIGnet and sample points on the shape represented by the network follow:
 ```python
 import torch
+from torch import nn
 from NIGnets import NIGnet
 
 # Create NIGnet object
