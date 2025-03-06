@@ -6,6 +6,34 @@ Neural Injective Geometry networks (NIGnets) for non-self-intersecting geometry.
 </div>
 
 
+## Installation
+To pip install run:
+```
+$ pip install git+https://github.com/atharvaaalok/NIGnets.git
+```
+
+
+## Basic Usage
+Given a candidate curve $Xc$ and a target curve $Xt$ we can measure the similarity using a given
+measure as follows:
+```python
+import torch
+from NIGnets import NIGnet
+
+# Create NIGnet object
+nig_net = NIGnet(layer_count = 4, act_fn = nn.Tanh)
+
+# Generate sample points on the curve represented by NIGnet
+num_pts = 1000
+t = torch.linspace(0, 1, num_pts).reshape(-1, 1)
+Xc = nig_net(t) # Shape: (num_pts, 2)
+```
+
+
+## License
+Distributed under the [MIT License](License).
+
+
 ## Project Plan
 - [x] Add .gitignore for the project.
 - [x] Create first cut documentation pages using Jupyterbooks and MyST markdown.
