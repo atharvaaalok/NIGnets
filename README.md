@@ -14,8 +14,7 @@ $ pip install git+https://github.com/atharvaaalok/NIGnets.git
 
 
 ## Basic Usage
-Given a candidate curve $Xc$ and a target curve $Xt$ we can measure the similarity using a given
-measure as follows:
+To create a basic NIGnet and sample points on the shape represented by the network follow:
 ```python
 import torch
 from NIGnets import NIGnet
