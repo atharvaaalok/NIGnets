@@ -41,3 +41,27 @@ def plot_curves(Xc: torch.Tensor, Xt: torch.Tensor) -> None:
 
     plt.axis('equal')
     plt.show()
+
+
+def plot_surfaces(Xc: torch.Tensor, Xt: torch.Tensor) -> None:
+    # Get torch tensor to cpu and disable gradient tracking to plot using matplotlib
+    Xc = Xc.detach().cpu()
+    Xt = Xt.detach().cpu()
+
+    # Create a figure with a 1x2 grid
+    fig, axes = plt.subplots(1, 2, figsize = (12, 6), subplot_kw = {'projection': '3d'})
+
+    # Plot Xt in the first subplot
+    axes[0].scatter(Xt[:, 0], Xt[:, 1], Xt[:, 2], s = 5, color = '#1F77B4')
+    axes[0].set_title('Target Surface')
+    axes[0].set_box_aspect([1, 1, 1])
+    axes[0].grid(False)
+
+    # Plot Xc in the second subplot
+    axes[1].scatter(Xc[:, 0], Xc[:, 1], Xc[:, 2], s = 5, color = 'r')
+    axes[1].set_title('Candidate Surface')
+    axes[1].set_box_aspect([1, 1, 1])
+    axes[1].grid(False)
+
+    plt.tight_layout()
+    plt.show()
