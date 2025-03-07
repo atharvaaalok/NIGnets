@@ -54,12 +54,20 @@ def plot_surfaces(Xc: torch.Tensor, Xt: torch.Tensor) -> None:
     # Plot Xt in the first subplot
     axes[0].scatter(Xt[:, 0], Xt[:, 1], Xt[:, 2], s = 5, color = '#1F77B4')
     axes[0].set_title('Target Surface')
+    max_dim_t = torch.max(torch.abs(Xt))
+    axes[0].set_xlim(-max_dim_t, max_dim_t)
+    axes[0].set_ylim(-max_dim_t, max_dim_t)
+    axes[0].set_zlim(-max_dim_t, max_dim_t)
     axes[0].set_box_aspect([1, 1, 1])
     axes[0].grid(False)
 
     # Plot Xc in the second subplot
     axes[1].scatter(Xc[:, 0], Xc[:, 1], Xc[:, 2], s = 5, color = 'r')
     axes[1].set_title('Candidate Surface')
+    max_dim_c = torch.max(torch.abs(Xc))
+    axes[1].set_xlim(-max_dim_c, max_dim_c)
+    axes[1].set_ylim(-max_dim_c, max_dim_c)
+    axes[1].set_zlim(-max_dim_c, max_dim_c)
     axes[1].set_box_aspect([1, 1, 1])
     axes[1].grid(False)
 
