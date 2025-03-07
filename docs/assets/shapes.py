@@ -77,3 +77,21 @@ def star_fractal(num_pts: int) -> torch.Tensor:
 def minkowski_fractal(num_pts: int) -> torch.Tensor:
     X = svg_extract_xy('minkowski_fractal.svg', num_pts = num_pts)
     return X
+
+
+def sphere(num_pts: int) -> torch.Tensor:
+    """Generates approximately evenly distributed points on the unit sphere using the Fibonacci
+    lattice.
+    """
+    idx = torch.arange(0, num_pts) + 0.5
+    phi = torch.arccos(1 - 2 * idx / num_pts)
+    theta = torch.pi * (1 + 5**0.5) * idx
+
+    # Compute x, y and z coordinates
+    x = torch.sin(phi) * torch.cos(theta)
+    y = torch.sin(phi) * torch.sin(theta)
+    z = torch.cos(phi)
+
+    # Concatenate to form a matrix of shape: (num_pts, 3)
+    X = torch.stack([x, y, z], dim = 1)
+    return X
