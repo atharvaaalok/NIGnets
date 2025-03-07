@@ -95,3 +95,23 @@ def sphere(num_pts: int) -> torch.Tensor:
     # Concatenate to form a matrix of shape: (num_pts, 3)
     X = torch.stack([x, y, z], dim = 1)
     return X
+
+
+def cube(num_pts: int) -> torch.Tensor:
+    # Generate points on the unit sphere first and then map them to a cube
+    idx = torch.arange(0, num_pts) + 0.5
+    phi = torch.arccos(1 - 2 * idx / num_pts)
+    theta = torch.pi * (1 + 5**0.5) * idx
+
+    # Compute x, y and z coordinates
+    x = torch.sin(phi) * torch.cos(theta)
+    y = torch.sin(phi) * torch.sin(theta)
+    z = torch.cos(phi)
+
+    # Compute the max-norm projection to map the sphere to the cube
+    sphere_pts = torch.stack([x, y, z], dim = 1)
+    s, _ = torch.max(torch.abs(sphere_pts), dim = 1)
+    x_cube, y_cube, z_cube = x/s, y/s, z/s
+
+    X = torch.stack([x_cube, y_cube, z_cube], dim = 1)
+    return X
