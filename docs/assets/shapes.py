@@ -62,3 +62,18 @@ def puzzle_piece(num_pts: int) -> torch.Tensor:
 def airplane(num_pts: int) -> torch.Tensor:
     X = svg_extract_xy('airplane.svg', num_pts = num_pts)
     return X
+
+
+def snowflake_fractal(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('snowflake_fractal.svg', num_pts = num_pts)
+    return X
+
+
+def star_fractal(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('star_fractal.svg', num_pts = num_pts)
+    return X
+
+
+def minkowski_fractal(num_pts: int) -> torch.Tensor:
+    X = svg_extract_xy('minkowski_fractal.svg', num_pts = num_pts)
+    return X
