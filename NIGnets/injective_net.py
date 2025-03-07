@@ -54,7 +54,8 @@ class NIGnet(nn.Module):
         monotonic_net: nn.Module = None,
         preaux_net = None,
         intersection: str = 'possible',
-        skip_connections: bool = True
+        skip_connections: bool = True,
+        geometry_dim: int = 2
     ) -> None:
         """
         Initialize NIGnet with specified architecture and intersection mode.
@@ -88,14 +89,22 @@ class NIGnet(nn.Module):
 
         self.skip_connections = skip_connections
 
+        self.geometry_dim = geometry_dim
         # Define the transformation from t on the [0, 1] interval to unit circle for closed shapes
         if preaux_net is not None:
             self.closed_transform = self.preaux_net
         else:
-            self.closed_transform = lambda t: torch.hstack([
-                torch.cos(2 * torch.pi * t),
-                torch.sin(2 * torch.pi * t)
-            ])
+            if geometry_dim == 2:
+                self.closed_transform = lambda t: torch.hstack([
+                    torch.cos(2 * torch.pi * t),
+                    torch.sin(2 * torch.pi * t)
+                ])
+            elif geometry_dim == 3:
+                self.closed_transform = lambda t, s: torch.hstack([
+                torch.sin(torch.pi * s) * torch.cos(2 * torch.pi * t),
+                torch.sin(torch.pi * s) * torch.sin(2 * torch.pi * t),
+                torch.cos(torch.pi * s)
+                ])
 
         Linear_class = nn.Linear if intersection == 'possible' else ExpLinear
         
@@ -107,7 +116,7 @@ class NIGnet(nn.Module):
         self.alphas = nn.ParameterList()
 
         for i in range(layer_count):
-            self.linear_layers.append(Linear_class(2, 2))
+            self.linear_layers.append(Linear_class(geometry_dim, geometry_dim))
             if act_fn is not None:
                 self.act_layers.append(act_fn())
             else:
@@ -115,11 +124,10 @@ class NIGnet(nn.Module):
             
             self.alphas.append(nn.Parameter(torch.tensor(1.0)))
         
-        self.final_linear = Linear_class(2, 2)
-        
-    
+        self.final_linear = Linear_class(geometry_dim, geometry_dim)
 
-    def forward(self, t: torch.Tensor) -> torch.Tensor:
+
+    def forward(self, T: torch.Tensor) -> torch.Tensor:
         """
         Perform the forward pass of the NIGnet.
 
@@ -136,7 +144,12 @@ class NIGnet(nn.Module):
             curve represented by the network.
         """
 
-        X = self.closed_transform(t)
+        if self.geometry_dim == 2:
+            t = T
+            X = self.closed_transform(t)
+        elif self.geometry_dim == 3:
+            t, s = T[:, 0:1], T[:, 1:2]
+            X = self.closed_transform(t, s)
 
         for i, (linear_layer, act_layer) in enumerate(zip(self.linear_layers, self.act_layers)):
             # Apply linear transformation
