@@ -115,3 +115,18 @@ def cube(num_pts: int) -> torch.Tensor:
 
     X = torch.stack([x_cube, y_cube, z_cube], dim = 1)
     return X
+
+
+def torus(num_pts: int) -> torch.Tensor:
+    # Create angular grid
+    uv_grid = torch.rand(num_pts, 2) * (2 * torch.pi)
+    u, v = uv_grid[:, 0], uv_grid[:, 1]
+
+    # Parameteric equation of torus
+    R, r = 3, 1
+    x = (R + r * torch.cos(v)) * torch.cos(u)
+    y = (R + r * torch.cos(v)) * torch.sin(u)
+    z = r * torch.sin(v)
+
+    X = torch.stack([x, y, z], dim = 1)
+    return X
