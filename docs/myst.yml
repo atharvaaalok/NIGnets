@@ -27,6 +27,7 @@ project:
     - file: auxilliary_networks.ipynb
     - file: auxilliary_networks_showcase.ipynb
   - file: showcase.ipynb
+  - file: extending_to_3D.ipynb
   - file: sensitivity_analysis.ipynb
   - file: API.ipynb
 site:
