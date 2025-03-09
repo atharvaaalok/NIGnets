@@ -81,5 +81,5 @@ Distributed under the [MIT License](License).
 - [ ] 3D NIGnets.
     - [x] Create documentation for 3D NIGnets.
     - [x] Create 3D surface point clouds to fit to.
-    - [ ] Fit 3D geometric shapes for showcase.
+    - [x] Fit 3D geometric shapes for showcase.
 - [ ] Experiment with different geometric loss functions.
