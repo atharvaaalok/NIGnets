@@ -31,6 +31,7 @@ project:
     children:
     - file: extending_to_3D.ipynb
     - file: 3D_showcase.ipynb
+    - file: choice_of_closed_transform_3D.ipynb
   - file: sensitivity_analysis.ipynb
   - file: API.ipynb
 site:
