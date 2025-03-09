@@ -80,6 +80,6 @@ Distributed under the [MIT License](License).
 - [x] Showcase for the full architecture.
 - [ ] 3D NIGnets.
     - [x] Create documentation for 3D NIGnets.
-    - [ ] Create 3D surface point clouds to fit to.
+    - [x] Create 3D surface point clouds to fit to.
     - [ ] Fit 3D geometric shapes for showcase.
 - [ ] Experiment with different geometric loss functions.
