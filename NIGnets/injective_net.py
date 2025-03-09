@@ -161,9 +161,13 @@ class NIGnet(nn.Module):
             if self.act_fn is not None:
                 X = act_layer(X)
             else:
-                # Apply activation function or monotonic network to each component of x separately
-                x1, x2 = X[:, 0:1], X[:, 1:2]
-                X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
+                if self.geometry_dim == 2:
+                    # Apply activation function or monotonic network to each component of x separately
+                    x1, x2 = X[:, 0:1], X[:, 1:2]
+                    X = torch.stack([act_layer(x1), act_layer(x2)], dim = -1)
+                elif self.geometry_dim == 3:
+                    x1, x2, x3 = X[:, 0:1], X[:, 1:2], X[:, 2:3]
+                    X = torch.stack([act_layer(x1), act_layer(x2), act_layer(x3)], dim = -1)
             
             if self.skip_connections:
                 alpha_sq = self.alphas[i] ** 2
