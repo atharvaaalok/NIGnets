@@ -78,7 +78,7 @@ Distributed under the [MIT License](License).
 - [ ] Fit repeating and fractal shapes.
     - [ ] Use trignometric activations in Pre-Aux networks.
 - [x] Showcase for the full architecture.
-- [ ] 3D NIGnets.
+- [x] 3D NIGnets.
     - [x] Create documentation for 3D NIGnets.
     - [x] Create 3D surface point clouds to fit to.
     - [x] Fit 3D geometric shapes for showcase.
