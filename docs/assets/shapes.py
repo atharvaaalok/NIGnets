@@ -1,5 +1,7 @@
 import torch
 from .shape_svg.svg_extract_xy import svg_extract_xy
+import open3d as o3d
+import numpy as np
 
 
 def circle(num_pts: int) -> torch.Tensor:
@@ -129,4 +131,51 @@ def torus(num_pts: int) -> torch.Tensor:
     z = r * torch.sin(v)
 
     X = torch.stack([x, y, z], dim = 1)
+    return X
+
+
+def stanford_bunny_3d(num_pts: int) -> torch.Tensor:
+    # Get the bunny mesh
+    bunny = o3d.data.BunnyMesh()
+    mesh = o3d.io.read_triangle_mesh(bunny.path)
+    mesh.compute_vertex_normals()
+
+    # Get point cloud
+    pcd = mesh.sample_points_poisson_disk(number_of_points = num_pts, init_factor = 5)
+
+    points = np.asarray(pcd.points)
+    X = torch.tensor(points, dtype = torch.float32)
+
+    # Center at origin and normalize
+    X = X - X.mean(dim = 0)
+    X = X / torch.max(torch.abs(X))
+
+    # Define rotation angles as tensors
+    theta_z = torch.tensor(torch.pi / 2)
+    theta_x = torch.tensor(-torch.pi * 7/4)
+    theta_y = torch.tensor(torch.pi / 2)
+
+    # Rotation matrices
+    R_z = torch.tensor([
+        [torch.cos(theta_z), -torch.sin(theta_z), 0],
+        [torch.sin(theta_z),  torch.cos(theta_z), 0],
+        [0, 0, 1]
+    ])
+
+    R_x = torch.tensor([
+        [1, 0, 0],
+        [0, torch.cos(theta_x), -torch.sin(theta_x)],
+        [0, torch.sin(theta_x),  torch.cos(theta_x)]
+    ])
+
+    R_y = torch.tensor([
+        [torch.cos(theta_y), 0, torch.sin(theta_y)],
+        [0, 1, 0],
+        [-torch.sin(theta_y), 0, torch.cos(theta_y)]
+    ])
+
+    # Combined rotation: first z, then x, then y
+    R = R_y @ R_x @ R_z
+    X = (R @ X.T).T
+
     return X
