@@ -18,11 +18,11 @@ setup(
     long_description_content_type = 'text/markdown',
     packages = find_packages(),
     install_requires = [
-        'matplotlib==3.10.0',
-        'numpy==2.2.3',
+        'matplotlib>=3.10.0',
+        'numpy>=2.2.3',
         'setuptools==57.4.0',
-        'svg.path==6.3',
-        'torch==2.5.1'
+        'svg.path>=6.3',
+        'torch>=2.5.1'
     ],
     keywords = ['NIGnets', 'geometry', 'neural networks', 'machine learning', 'deep learning',
                 'optimization', 'shape optimization', 'geometric deep learning', 'shape matching',
